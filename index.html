@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISTEMA CERES - 3M Agropecuária</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-dark: #001F47;
+            --primary: #00A651;
+            --secondary: #003D87;
+            --accent: #FDB913;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            min-width: 220px;
+            background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary) 50%, var(--secondary) 100%);
+            color: white;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-box {
+            width: 75px;
+            height: 75px;
+            background: linear-gradient(135deg, #001F47 0%, #00A651 100%);
+            border-radius: 12px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            font-weight: 900;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 166, 81, 0.25);
+            letter-spacing: -2px;
+        }
+
+        .sidebar-title {
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .sidebar-subtitle {
+            font-size: 11px;
+            opacity: 0.7;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 10px;
+            flex: 1;
+        }
+
+        .menu-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            padding: 15px 12px 8px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .menu-item { margin-bottom: 6px; }
+
+        .menu-btn {
+            width: 100%;
+            padding: 12px 14px;
+            border: none;
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.8);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        .menu-btn.active {
+            background: rgba(255,255,255,0.25);
+            color: white;
+            border-left: 3px solid var(--accent);
+            padding-left: 11px;
+        }
+
+        .sidebar-footer {
+            padding: 15px;
+            text-align: center;
+            font-size: 11px;
+            opacity: 0.7;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .usuario-input {
+            padding: 10px;
+            margin: 10px 15px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .usuario-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .log-btn {
+            background: rgba(0, 166, 81, 0.2);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin: 10px 15px;
+            width: calc(100% - 30px);
+        }
+
+        .log-btn:hover {
+            background: rgba(0, 166, 81, 0.3);
+        }
+
+        /* MAIN */
+        .main-content {
+            margin-left: 220px;
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #003D87 40%, var(--primary) 100%);
+            color: white;
+            padding: 40px 50px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,31,71,0.35), 0 0 30px rgba(0,166,81,0.15);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(253,185,19,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 15px;
+            opacity: 0.95;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 35px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: 700;
+            border-left: 5px solid var(--accent);
+            padding-left: 18px;
+        }
+
+        h3 {
+            color: var(--primary);
+            margin: 30px 0 18px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--primary-dark);
+        }
+
+        input, select {
+            padding: 11px 14px;
+            border: 1.5px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 61, 135, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .form-row > div { margin-bottom: 0; }
+        .form-row input, .form-row select { margin-bottom: 0; }
+
+        .btn {
+            padding: 13px 32px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,61,135,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,61,135,0.35);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary) 0%, #2a9a8e 100%);
+            box-shadow: 0 4px 12px rgba(26,122,111,0.2);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(26,122,111,0.35);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        /* CORREÇÃO 3: scroll horizontal nas tabelas */
+        .table-scroll-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            border-radius: 6px;
+        }
+
+        .table-scroll-wrapper table {
+            min-width: max-content;
+            margin-top: 0;
+        }
+
+        th {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 14px;
+            text-align: left;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 13px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            white-space: nowrap;
+        }
+
+        tr:hover { background: rgba(0,61,135,0.02); }
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #999;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 28px;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0,31,71,0.2);
+        }
+
+        .card-title {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-bottom: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; height: auto; position: relative; min-width: unset; }
+            .main-content { margin-left: 0; padding: 15px; }
+            .header { padding: 25px 20px; }
+            .header h1 { font-size: 24px; }
+        }
+
+        /* TELA DE LOGIN */
+        #telaLogin {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #001F47 0%, #003D87 50%, #00A651 100%);
+            z-index: 99999;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #telaLogin.oculto { display: none; }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 45px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+
+        .login-logo {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #001F47 0%, #00A651 100%);
+            border-radius: 16px;
+            margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 36px; font-weight: 900; color: white;
+            box-shadow: 0 8px 24px rgba(0,166,81,0.3);
+        }
+
+        .login-titulo {
+            font-size: 22px; font-weight: 900; color: #001F47;
+            margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .login-subtitulo {
+            font-size: 13px; color: #666; margin-bottom: 35px; font-weight: 500;
+        }
+
+        .login-field {
+            text-align: left; margin-bottom: 20px;
+        }
+
+        .login-field label {
+            font-size: 12px; font-weight: 700; color: #001F47;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+        }
+
+        .login-field select,
+        .login-field input[type="password"] {
+            width: 100%; padding: 13px 16px;
+            border: 2px solid #e0e0e0; border-radius: 8px;
+            font-size: 14px; transition: all 0.3s; margin-bottom: 0;
+            background: #fafafa;
+        }
+
+        .login-field select:focus,
+        .login-field input[type="password"]:focus {
+            border-color: #00A651; background: white;
+            box-shadow: 0 0 0 3px rgba(0,166,81,0.12); outline: none;
+        }
+
+        .login-btn {
+            width: 100%; padding: 15px;
+            background: linear-gradient(135deg, #001F47 0%, #00A651 100%);
+            color: white; border: none; border-radius: 8px;
+            font-size: 15px; font-weight: 800; cursor: pointer;
+            margin-top: 10px; letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(0,166,81,0.3);
+        }
+
+        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,166,81,0.4); }
+
+        .login-erro {
+            background: #ffebee; color: #c62828; border: 1px solid #ffcdd2;
+            padding: 10px 16px; border-radius: 6px; font-size: 13px;
+            font-weight: 600; margin-top: 15px; display: none;
+        }
+
+        /* MODAL DE LOGS */
+        #modalLogs {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.65); z-index: 99998;
+            align-items: center; justify-content: center; padding: 20px;
+        }
+
+        .logs-card {
+            background: white; border-radius: 15px;
+            width: 100%; max-width: 1100px;
+            max-height: 90vh; display: flex; flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden;
+        }
+
+        .logs-header {
+            background: linear-gradient(135deg, #001F47 0%, #003D87 100%);
+            color: white; padding: 25px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logs-body {
+            flex: 1; overflow-y: auto; padding: 25px;
+        }
+
+        .logs-footer {
+            padding: 15px 25px; background: #f5f5f5;
+            border-top: 1px solid #ddd; display: flex;
+            gap: 10px; align-items: center; justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">3M</div>
+            <div class="sidebar-title">3M Agropecuária</div>
+            <div class="sidebar-subtitle">SISTEMA CERES</div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-section-title">📊 ANÁLISES</li>
+            <li class="menu-item">
+                <button class="menu-btn active" onclick="mudarAba('dashboard', this)">🎯 Dashboard</button>
+            </li>
+            <li class="menu-item">
+                <button class="menu-btn" onclick="mudarAba('entrada', this)">📥 Entrada</button>
+            </li>
+            <li class="menu-item">
+                <button class="menu-btn" onclick="mudarAba('controle', this)">📋 Controle</button>
+            </li>
+
+            <li class="menu-section-title" style="margin-top: 20px;">⚙️ OPERAÇÕES</li>
+            <li class="menu-item">
+                <button class="menu-btn" onclick="mudarAba('mortes', this)">⚠️ Mortes</button>
+            </li>
+            <li class="menu-item">
+                <button class="menu-btn" onclick="mudarAba('previsoes', this)">📈 Previsões</button>
+            </li>
+            <li class="menu-item">
+                <button class="menu-btn" onclick="mudarAba('abate', this)">🐮 Abate</button>
+            </li>
+        </ul>
+
+        <div style="flex: 1;"></div>
+
+        <div class="sidebar-footer">
+            <!-- usuário logado -->
+            <div style="background:rgba(255,255,255,0.12); border-radius:8px; padding:10px 12px; margin:0 8px 10px; text-align:left;">
+                <div style="font-size:10px; opacity:0.7; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Usuário logado</div>
+                <div id="usuarioLogadoNome" style="font-size:12px; font-weight:800; color:white; word-break:break-word;">—</div>
+                <div id="usuarioLogadoHora" style="font-size:10px; opacity:0.6; margin-top:2px;">—</div>
+            </div>
+            <button onclick="abrirModalLogs()" class="log-btn">📋 Ver Logs</button>
+            <button onclick="recarregarDados()" style="background:#4CAF50; color:white; border:none; padding:8px; width:95%; border-radius:4px; cursor:pointer; font-weight:700; margin-top:5px; font-size:12px;">🔄 Recarregar</button>
+            <button onclick="fazerLogout()" style="background:#c0392b; color:white; border:none; padding:8px; width:95%; border-radius:4px; cursor:pointer; font-weight:700; margin-top:5px; font-size:12px;">🚪 Sair</button>
+            <p style="margin-top:10px;">Desenvolvido por<br>Natália Fonseca<br>natalia@3m.agr.br</p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- HEADER FIXO NO TOPO - SEMPRE VISÍVEL -->
+        <div class="header">
+            <h1>SISTEMA CERES</h1>
+            <p>Controle Financeiro de Operação Fiduciária • Fazenda São Geraldo</p>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="tab-content active">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-title">📦 Total de Lotes</div>
+                    <div class="card-value" id="totalLotes">0</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">💰 C.A. Total</div>
+                    <div class="card-value" id="totalCA">R$ 0</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📈 Juros Acumulados</div>
+                    <div class="card-value" id="totalJuros">R$ 0</div>
+                </div>
+                <div class="card" style="background: linear-gradient(135deg, var(--secondary) 0%, #2a9a8e 100%);">
+                    <div class="card-title">🐂 Preço BOI SP</div>
+                    <div class="card-value" id="precoBoiSp">R$ 343,48</div>
+                    <div style="margin-top:15px; display:flex; gap:8px;">
+                        <input type="number" id="inputPrecoBoi" placeholder="347.80" style="flex:1; padding:8px; border:none; border-radius:4px; font-size:12px; margin-bottom:0;" step="0.01" min="0">
+                        <button onclick="atualizarPrecoBoiManual()" style="background:#FDB913; color:#001F47; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-weight:700; font-size:11px; white-space:nowrap;">💾 Salvar</button>
+                        <button onclick="buscarPrecoBoiAgora()" style="background:#ffffff; color:#003D87; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-weight:700; font-size:11px; white-space:nowrap;">🔄 API</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENTRADA -->
+        <div id="entrada" class="tab-content">
+            <div class="form-row">
+                <div>
+                    <label>NFe *</label>
+                    <input type="text" id="nfe" placeholder="001">
+                </div>
+                <div>
+                    <label>Baia *</label>
+                    <input type="text" id="baia" placeholder="A-01">
+                </div>
+                <div>
+                    <label>Data Entrada *</label>
+                    <input type="date" id="dataEntrada">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label>Qtd *</label>
+                    <input type="number" id="qtd" placeholder="30" min="1" oninput="calcularCA()">
+                </div>
+                <div>
+                    <label>Preço Unitário *</label>
+                    <input type="number" id="rUnitario" placeholder="5000" value="5000" step="0.01" oninput="calcularCA()">
+                </div>
+                <div>
+                    <label>C.A. Total * (Calculado)</label>
+                    <input type="number" id="ca" placeholder="0" step="0.01" readonly style="background: #f0f0f0; cursor: not-allowed;">
+                </div>
+            </div>
+
+            <button class="btn btn-secondary" onclick="adicionarLote()">✅ Adicionar Lote</button>
+        </div>
+
+        <!-- CONTROLE -->
+        <div id="controle" class="tab-content">
+            <div style="background:#f5f5f5; padding:15px; border-radius:8px; margin-bottom:15px;">
+                <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px;">
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Nota Fiscal</label>
+                        <input type="text" id="filterNFe" placeholder="NF..." onkeyup="atualizarControle()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Baía</label>
+                        <input type="text" id="filterBaia" placeholder="M-01..." onkeyup="atualizarControle()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Data Entrada (De)</label>
+                        <input type="date" id="filterDataInicio" onchange="atualizarControle()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Data Entrada (Até)</label>
+                        <input type="date" id="filterDataFim" onchange="atualizarControle()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Ciclo (dias min)</label>
+                        <input type="number" id="filterCicloMin" placeholder="0" onchange="atualizarControle()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                </div>
+                <button onclick="document.getElementById('filterNFe').value=''; document.getElementById('filterBaia').value=''; document.getElementById('filterDataInicio').value=''; document.getElementById('filterDataFim').value=''; document.getElementById('filterCicloMin').value=''; atualizarControle();" style="margin-top:10px; padding:8px 15px; background:#E74C3C; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:700;">Limpar Filtros</button>
+            </div>
+
+            <h3 style="color:#003D87; font-weight:700; margin-top:20px;">🏪 Baías em Uso</h3>
+            <div id="baiasEmUso" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:10px; margin-bottom:20px;"></div>
+
+            <h3 style="color:#003D87; font-weight:700; margin-top:20px;">📊 Lotes Ativos</h3>
+            <div id="tabelaControle">
+                <div class="empty">📭 Nenhum lote</div>
+            </div>
+        </div>
+
+        <!-- MORTES -->
+        <div id="mortes" class="tab-content">
+            <div class="form-row">
+                <div>
+                    <label>Selecione NFe/Baia *</label>
+                    <select id="nfeMortes">
+                        <option>-- Selecione --</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Qtd Morta *</label>
+                    <input type="number" id="qtdMorta" placeholder="1" value="1" min="1">
+                </div>
+                <div>
+                    <label>Data da Morte *</label>
+                    <input type="date" id="dataMorte">
+                </div>
+            </div>
+
+            <button class="btn" onclick="registrarMorte()">✅ Registrar</button>
+
+            <h3>Histórico de Mortes</h3>
+
+            <div style="background:#f5f5f5; padding:15px; border-radius:8px; margin-bottom:15px;">
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+                    <div><label style="font-weight:700; font-size:12px;">Nota Fiscal</label>
+                        <input type="text" id="filterMortesNFe" placeholder="NF..." onkeyup="atualizarTabelaMortes()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;"></div>
+                    <div><label style="font-weight:700; font-size:12px;">Baía</label>
+                        <input type="text" id="filterMortesBaia" placeholder="M-01..." onkeyup="atualizarTabelaMortes()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;"></div>
+                    <div><label style="font-weight:700; font-size:12px;">Data (De)</label>
+                        <input type="date" id="filterMortesDataDe" onchange="atualizarTabelaMortes()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;"></div>
+                    <div><label style="font-weight:700; font-size:12px;">Data (Até)</label>
+                        <input type="date" id="filterMortesDataAte" onchange="atualizarTabelaMortes()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;"></div>
+                </div>
+                <button onclick="document.getElementById('filterMortesNFe').value=''; document.getElementById('filterMortesBaia').value=''; document.getElementById('filterMortesDataDe').value=''; document.getElementById('filterMortesDataAte').value=''; atualizarTabelaMortes();" style="margin-top:10px; padding:8px 15px; background:#E74C3C; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:700;">Limpar</button>
+            </div>
+
+            <div id="tabelaMortes">
+                <div class="empty">📭 Nenhuma morte registrada</div>
+            </div>
+        </div>
+
+        <!-- PREVISÕES -->
+        <div id="previsoes" class="tab-content" style="padding: 20px;">
+            <div style="background:#f5f5f5; padding:15px; border-radius:8px; margin-bottom:15px;">
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:10px;">
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Nota Fiscal</label>
+                        <input type="text" id="filterPrevNFe" placeholder="NF..." onkeyup="atualizarPrevisoes()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Baía</label>
+                        <input type="text" id="filterPrevBaia" placeholder="M-01..." onkeyup="atualizarPrevisoes()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Status</label>
+                        <select id="filterPrevStatus" onchange="atualizarPrevisoes()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                            <option value="">-- Todos --</option>
+                            <option value="verde">🟢 Verde (1-90 dias)</option>
+                            <option value="amarelo">🟡 Amarelo (91-100 dias)</option>
+                            <option value="vermelho">🔴 Vermelho (101+ dias)</option>
+                        </select>
+                    </div>
+                    <div style="display:flex; align-items:flex-end;">
+                        <button onclick="document.getElementById('filterPrevNFe').value=''; document.getElementById('filterPrevBaia').value=''; document.getElementById('filterPrevStatus').value=''; atualizarPrevisoes();" style="width:100%; padding:8px 15px; background:#E74C3C; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:700;">Limpar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CORREÇÃO 3: wrapper com scroll horizontal -->
+            <div id="tabelaPrevisoes" class="table-scroll-wrapper">
+                <div class="empty">📭 Nenhuma previsão</div>
+            </div>
+        </div>
+
+        <!-- ABATE -->
+        <div id="abate" class="tab-content">
+            <div class="form-row">
+                <div>
+                    <label>Selecione NFe para ABATER *</label>
+                    <select id="nfeAbate" onchange="carregarBaiasAbate()">
+                        <option>-- Selecione --</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Frigorífico *</label>
+                    <select id="frigorificoAbate" style="border:2px solid #ff6b6b; margin-bottom:0;">
+                        <option value="">-- Selecione --</option>
+                        <option value="NaturaFrig">NaturaFrig</option>
+                        <option value="Frigol">Frigol</option>
+                        <option value="JBS Andradina">JBS Andradina</option>
+                        <option value="JBS Lins">JBS Lins</option>
+                    </select>
+                </div>
+            </div>
+
+            <h3>Quantidade por Baia</h3>
+            <div id="baiasAbateContainer"></div>
+
+            <div class="form-row">
+                <div>
+                    <label>Arrobas Totais (Romaneio do Frigorífico) *</label>
+                    <input type="number" id="arrobasReais" placeholder="100" step="0.01" min="0">
+                </div>
+                <div>
+                    <label>Preço por Arroba (R$) *</label>
+                    <input type="number" id="precoArroba" placeholder="343.48" value="343.48" step="0.01" min="0">
+                </div>
+                <div>
+                    <label>% Rendimento de Carcaça *</label>
+                    <input type="number" id="rendimentoCarcaca" placeholder="60" step="0.01" min="0" max="100" value="60">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div style="grid-column: span 2;">
+                    <label>Observações</label>
+                    <textarea id="observacoesAbate" placeholder="Notas sobre o abate..." style="width:100%; padding:10px; border:1px solid #00A651; border-radius:4px; min-height:80px; resize:vertical;"></textarea>
+                </div>
+            </div>
+
+            <button class="btn" onclick="executarAbate()">✅ Executar Abate</button>
+
+            <h3>Histórico de Abates</h3>
+
+            <div style="background:#f5f5f5; padding:15px; border-radius:8px; margin-bottom:15px;">
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:10px;">
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Nota Fiscal</label>
+                        <input type="text" id="filterAbateNFe" placeholder="NF..." onkeyup="atualizarTabelaAbate()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Frigorífico</label>
+                        <input type="text" id="filterAbateFrig" placeholder="Frig..." onkeyup="atualizarTabelaAbate()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Data (De)</label>
+                        <input type="date" id="filterAbateDataDe" onchange="atualizarTabelaAbate()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                    <div>
+                        <label style="font-weight:700; font-size:12px; color:#003D87;">Data (Até)</label>
+                        <input type="date" id="filterAbateDataAte" onchange="atualizarTabelaAbate()" style="width:100%; padding:8px; border:1px solid #00A651; border-radius:4px; margin-bottom:0;">
+                    </div>
+                </div>
+                <button onclick="document.getElementById('filterAbateNFe').value=''; document.getElementById('filterAbateFrig').value=''; document.getElementById('filterAbateDataDe').value=''; document.getElementById('filterAbateDataAte').value=''; atualizarTabelaAbate();" style="padding:8px 15px; background:#E74C3C; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:700;">Limpar</button>
+            </div>
+
+            <div id="tabelaAbate" class="table-scroll-wrapper">
+                <div class="empty">📭 Nenhum abate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALHES BAÍA -->
+    <div id="modalBaia" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:99999; align-items:center; justify-content:center; overflow-y:auto; padding:20px;">
+        <div style="background:white; width:100%; max-width:1000px; border-radius:15px; box-shadow:0 20px 60px rgba(0,0,0,0.3); overflow:hidden;">
+            <div style="background:linear-gradient(135deg, #001F47 0%, #00A651 100%); color:white; padding:30px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 style="margin:0; font-size:28px; font-weight:900; border:none; padding:0; color:white;">🏪 Detalhes da Baía</h2>
+                    <p style="margin:8px 0 0 0; opacity:0.9; font-size:16px;" id="modalBaiaNome">M-00</p>
+                </div>
+                <button onclick="fecharModalBaia()" style="background:transparent; border:none; color:white; font-size:32px; cursor:pointer; padding:0; width:50px; height:50px; display:flex; align-items:center; justify-content:center;">✕</button>
+            </div>
+
+            <div style="padding:30px; max-height:calc(100vh - 200px); overflow-y:auto;">
+                <div id="modalBaiaConteudo"></div>
+            </div>
+
+            <div style="background:#f5f5f5; padding:20px; text-align:right; border-top:1px solid #ddd;">
+                <button onclick="fecharModalBaia()" style="padding:10px 30px; background:#E74C3C; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:700; font-size:14px;">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA DE LOGIN -->
+    <div id="telaLogin">
+        <div class="login-card">
+            <div class="login-logo">3M</div>
+            <div class="login-titulo">SISTEMA CERES</div>
+            <div class="login-subtitulo">Controle Financeiro • Fazenda São Geraldo</div>
+
+            <!-- PAINEL NORMAL DE LOGIN -->
+            <div id="painelLogin">
+                <div class="login-field">
+                    <label>Seu nome</label>
+                    <select id="loginUsuario" onchange="verificarPrimeiroAcesso()">
+                        <option value="">— Selecione —</option>
+                        <option value="Ana Carolina Ferreira de Souza Santos">Ana Carolina (Fiscal)</option>
+                        <option value="Heitor Pirani Salmazi">Heitor (Gerente Admin)</option>
+                        <option value="Natalia da Fonseca">Natalia (Agronegócios)</option>
+                        <option value="Rosielli Aparecida Nasc. Montanha">Rosielli (Gerente Fin.)</option>
+                    </select>
+                </div>
+
+                <div class="login-field">
+                    <label id="loginSenhaLabel">Senha de acesso</label>
+                    <input type="password" id="loginSenha" placeholder="••••••••" onkeydown="if(event.key==='Enter') tentarLogin()">
+                </div>
+
+                <div id="badgePrimeiroAcesso" style="display:none; background:#fff8e1; border:1px solid #FDB913; border-radius:8px; padding:10px 14px; margin-bottom:15px; font-size:12px; color:#795548; text-align:left;">
+                    🔔 <strong>Primeiro acesso detectado.</strong> Use a senha padrão <strong>3M2026</strong> — você criará sua senha pessoal em seguida.
+                </div>
+
+                <button class="login-btn" onclick="tentarLogin()">🔓 Entrar no Sistema</button>
+                <div class="login-erro" id="loginErro"></div>
+            </div>
+
+            <!-- PAINEL DE CRIAR SENHA PESSOAL (primeiro acesso) -->
+            <div id="painelCriarSenha" style="display:none;">
+                <div style="background:#e8f5e9; border:1px solid #a5d6a7; border-radius:10px; padding:16px; margin-bottom:20px; font-size:13px; color:#2e7d32; text-align:left;">
+                    ✅ Senha padrão aceita! <strong>Crie agora sua senha pessoal</strong> para os próximos acessos.
+                </div>
+
+                <div class="login-field">
+                    <label>Nova senha</label>
+                    <input type="password" id="novaSenha1" placeholder="Mínimo 6 caracteres" onkeydown="if(event.key==='Enter') document.getElementById('novaSenha2').focus()">
+                </div>
+                <div class="login-field">
+                    <label>Confirmar nova senha</label>
+                    <input type="password" id="novaSenha2" placeholder="Repita a senha" onkeydown="if(event.key==='Enter') salvarNovaSenha()">
+                </div>
+
+                <button class="login-btn" onclick="salvarNovaSenha()">💾 Salvar Senha e Entrar</button>
+                <div class="login-erro" id="criarSenhaErro"></div>
+            </div>
+
+            <div style="margin-top:20px; font-size:11px; color:#aaa;">
+                3M Agropecuária • Acesso restrito a usuários autorizados
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE LOGS -->
+    <div id="modalLogs" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.65); z-index:99998; align-items:center; justify-content:center; padding:20px;">
+        <div class="logs-card">
+            <div class="logs-header">
+                <div>
+                    <h2 style="color:white; border:none; padding:0; margin:0; font-size:22px;">📋 Registro de Acessos e Alterações</h2>
+                    <p style="opacity:0.75; font-size:13px; margin-top:5px;">Auditoria completa do Sistema CERES</p>
+                </div>
+                <button onclick="fecharModalLogs()" style="background:transparent; border:none; color:white; font-size:28px; cursor:pointer;">✕</button>
+            </div>
+
+            <div style="padding:15px 25px; background:#f8f9fa; border-bottom:1px solid #e0e0e0; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <input type="text" id="filterLogUsuario" placeholder="🔍 Filtrar por usuário..." onkeyup="renderizarLogs()" style="padding:8px 12px; border:1px solid #ddd; border-radius:6px; font-size:13px; width:200px; margin-bottom:0;">
+                <select id="filterLogAcao" onchange="renderizarLogs()" style="padding:8px 12px; border:1px solid #ddd; border-radius:6px; font-size:13px; width:160px; margin-bottom:0;">
+                    <option value="">Todas as ações</option>
+                    <option value="LOGIN">🔑 Login</option>
+                    <option value="LOGOUT">🚪 Logout</option>
+                    <option value="CRIAR">➕ Criar</option>
+                    <option value="EDITAR">✏️ Editar</option>
+                    <option value="DELETAR">🗑️ Deletar</option>
+                </select>
+                <select id="filterLogTabela" onchange="renderizarLogs()" style="padding:8px 12px; border:1px solid #ddd; border-radius:6px; font-size:13px; width:150px; margin-bottom:0;">
+                    <option value="">Todas as tabelas</option>
+                    <option value="ACESSO">ACESSO</option>
+                    <option value="SISTEMA">SISTEMA</option>
+                    <option value="LOTES">LOTES</option>
+                    <option value="MORTES">MORTES</option>
+                    <option value="ABATES">ABATES</option>
+                </select>
+                <button onclick="exportarLogsCSV()" style="padding:8px 16px; background:#003D87; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:700; font-size:12px;">⬇️ Exportar CSV</button>
+                <button onclick="if(confirm('Limpar TODOS os logs?')){logs=[];localStorage.setItem(\'ceres_logs\',\'[]\');renderizarLogs();}" style="padding:8px 16px; background:#c0392b; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:700; font-size:12px;">🗑️ Limpar Logs</button>
+            </div>
+
+            <div class="logs-body">
+                <div id="logsConteudo"></div>
+            </div>
+
+            <div class="logs-footer">
+                <span id="logsContador" style="font-size:13px; color:#666; margin-right:auto;"></span>
+                <button onclick="fecharModalLogs()" style="padding:10px 30px; background:#E74C3C; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:700;">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let lotes = [];
+        let mortes = [];
+        let abates = [];
+        let logs = [];
+        let usuarioAtual = 'Sistema';
+        let precoBoiSp = 343.48;
+
+        // =============================================
+        // CONFIGURAÇÃO DE ACESSO
+        // =============================================
+        const SENHA_PADRAO = '3M2026'; // Senha inicial distribuída para todos
+
+        // Hash simples (não criptografia de produção, mas protege leitura direta)
+        function hashSenha(s) {
+            let h = 0;
+            for (let i = 0; i < s.length; i++) {
+                h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+            }
+            return 'h_' + Math.abs(h).toString(36);
+        }
+
+        function chaveUsuario(nome) {
+            // Chave de localStorage para senha do usuário
+            return 'ceres_pwd_' + hashSenha(nome);
+        }
+
+        function usuarioTemSenhaPropria(nome) {
+            return !!localStorage.getItem(chaveUsuario(nome));
+        }
+
+        function senhaUsuarioCorreta(nome, senha) {
+            const salvo = localStorage.getItem(chaveUsuario(nome));
+            if (!salvo) return false;
+            return salvo === hashSenha(senha);
+        }
+
+        function salvarSenhaUsuario(nome, senha) {
+            localStorage.setItem(chaveUsuario(nome), hashSenha(senha));
+        }
+
+        // =============================================
+        // FLUXO DE LOGIN
+        // =============================================
+        function verificarPrimeiroAcesso() {
+            const nome = document.getElementById('loginUsuario').value;
+            const badge = document.getElementById('badgePrimeiroAcesso');
+            const label = document.getElementById('loginSenhaLabel');
+            if (!nome) { badge.style.display = 'none'; return; }
+
+            if (!usuarioTemSenhaPropria(nome)) {
+                badge.style.display = 'block';
+                label.textContent = 'Senha padrão (primeiro acesso)';
+            } else {
+                badge.style.display = 'none';
+                label.textContent = 'Sua senha pessoal';
+            }
+        }
+
+        function tentarLogin() {
+            const nome = document.getElementById('loginUsuario').value;
+            const senha = document.getElementById('loginSenha').value;
+
+            if (!nome) { mostrarErroLogin('⚠️ Selecione seu nome.'); return; }
+            if (!senha) { mostrarErroLogin('⚠️ Digite a senha.'); return; }
+
+            if (!usuarioTemSenhaPropria(nome)) {
+                // PRIMEIRO ACESSO — verifica senha padrão
+                if (senha !== SENHA_PADRAO) {
+                    mostrarErroLogin('❌ Senha padrão incorreta. Use: 3M2026');
+                    return;
+                }
+                // Correto! Mostrar painel de criação de senha
+                document.getElementById('painelLogin').style.display = 'none';
+                document.getElementById('painelCriarSenha').style.display = 'block';
+                setTimeout(() => document.getElementById('novaSenha1').focus(), 100);
+                // Salvar nome temporariamente
+                window._nomeEmCadastrо = nome;
+
+            } else {
+                // ACESSO NORMAL — verifica senha pessoal
+                if (!senhaUsuarioCorreta(nome, senha)) {
+                    mostrarErroLogin('❌ Senha incorreta.');
+                    return;
+                }
+                concluirLogin(nome);
+            }
+        }
+
+        function salvarNovaSenha() {
+            const s1 = document.getElementById('novaSenha1').value;
+            const s2 = document.getElementById('novaSenha2').value;
+            const erroEl = document.getElementById('criarSenhaErro');
+
+            if (!s1) { erroEl.textContent = '⚠️ Digite uma senha.'; erroEl.style.display = 'block'; return; }
+            if (s1.length < 6) { erroEl.textContent = '⚠️ Senha deve ter no mínimo 6 caracteres.'; erroEl.style.display = 'block'; return; }
+            if (s1 !== s2) { erroEl.textContent = '❌ As senhas não coincidem.'; erroEl.style.display = 'block'; return; }
+            if (s1 === SENHA_PADRAO) { erroEl.textContent = '⚠️ Não use a senha padrão como senha pessoal.'; erroEl.style.display = 'block'; return; }
+
+            const nome = window._nomeEmCadastrо;
+            salvarSenhaUsuario(nome, s1);
+            adicionarLog('SENHA', 'ACESSO', '-', 'Criação de senha pessoal', 'Primeiro acesso', nome);
+            erroEl.style.display = 'none';
+            concluirLogin(nome);
+        }
+
+        function concluirLogin(nome) {
+            usuarioAtual = nome;
+            localStorage.setItem('ceres_usuario', nome);
+
+            const agora = new Date();
+            localStorage.setItem('ceres_session_usuario', nome);
+            localStorage.setItem('ceres_session_hora', agora.toISOString());
+
+            adicionarLog('LOGIN', 'ACESSO', '-', 'Entrada', '', nome);
+            atualizarSidebarUsuario(nome, agora);
+            document.getElementById('telaLogin').classList.add('oculto');
+            inicializarSistema();
+        }
+
+        function mostrarErroLogin(msg) {
+            const el = document.getElementById('loginErro');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function fazerLogout() {
+            if (!confirm('Deseja sair do sistema?')) return;
+            adicionarLog('LOGOUT', 'ACESSO', '-', 'Saída', usuarioAtual, '');
+            localStorage.removeItem('ceres_session_usuario');
+            localStorage.removeItem('ceres_session_hora');
+            usuarioAtual = 'Sistema';
+            // Resetar painel de login
+            document.getElementById('painelLogin').style.display = 'block';
+            document.getElementById('painelCriarSenha').style.display = 'none';
+            document.getElementById('loginUsuario').value = '';
+            document.getElementById('loginSenha').value = '';
+            document.getElementById('loginErro').style.display = 'none';
+            document.getElementById('badgePrimeiroAcesso').style.display = 'none';
+            document.getElementById('loginSenhaLabel').textContent = 'Senha de acesso';
+            document.getElementById('telaLogin').classList.remove('oculto');
+        }
+
+        function atualizarSidebarUsuario(nome, data) {
+            const nomeEl = document.getElementById('usuarioLogadoNome');
+            const horaEl = document.getElementById('usuarioLogadoHora');
+            if (nomeEl) {
+                const partes = nome.split(' ');
+                nomeEl.textContent = partes.length > 2 ? `${partes[0]} ${partes[partes.length-1]}` : nome;
+            }
+            if (horaEl) {
+                const d = data || new Date();
+                horaEl.textContent = `Desde ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+            }
+        }
+
+        // =============================================
+        // MODAL DE LOGS
+        // =============================================
+        function abrirModalLogs() {
+            renderizarLogs();
+            document.getElementById('modalLogs').style.display = 'flex';
+        }
+
+        function fecharModalLogs() {
+            document.getElementById('modalLogs').style.display = 'none';
+        }
+
+        function renderizarLogs() {
+            const filterUsuario = (document.getElementById('filterLogUsuario')?.value || '').toLowerCase();
+            const filterAcao = document.getElementById('filterLogAcao')?.value || '';
+            const filterTabela = document.getElementById('filterLogTabela')?.value || '';
+
+            let filtrados = [...logs].reverse().filter(l => {
+                if (filterUsuario && !l.usuario.toLowerCase().includes(filterUsuario)) return false;
+                if (filterAcao && l.acao !== filterAcao) return false;
+                if (filterTabela && l.tabela !== filterTabela) return false;
+                return true;
+            });
+
+            const contador = document.getElementById('logsContador');
+            if (contador) contador.textContent = `${filtrados.length} registro(s) encontrado(s) de ${logs.length} total`;
+
+            if (filtrados.length === 0) {
+                document.getElementById('logsConteudo').innerHTML = '<div class="empty">📭 Nenhum registro encontrado</div>';
+                return;
+            }
+
+            const corAcao = {
+                'LOGIN':   { bg: '#e8f5e9', cor: '#2e7d32', emoji: '🔑' },
+                'LOGOUT':  { bg: '#fff3e0', cor: '#e65100', emoji: '🚪' },
+                'CRIAR':   { bg: '#e3f2fd', cor: '#1565c0', emoji: '➕' },
+                'EDITAR':  { bg: '#fffde7', cor: '#f57f17', emoji: '✏️' },
+                'DELETAR': { bg: '#ffebee', cor: '#b71c1c', emoji: '🗑️' },
+            };
+
+            let html = `<table style="width:100%; font-size:12px; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#001F47; color:white; position:sticky; top:0;">
+                        <th style="padding:12px 14px; text-align:left; white-space:nowrap;">Data</th>
+                        <th style="padding:12px 14px; text-align:left; white-space:nowrap;">Hora</th>
+                        <th style="padding:12px 14px; text-align:left; white-space:nowrap;">Usuário</th>
+                        <th style="padding:12px 14px; text-align:left; white-space:nowrap;">Ação</th>
+                        <th style="padding:12px 14px; text-align:left; white-space:nowrap;">Módulo</th>
+                        <th style="padding:12px 14px; text-align:left; white-space:nowrap;">Campo</th>
+                        <th style="padding:12px 14px; text-align:left; white-space:nowrap;">Anterior</th>
+                        <th style="padding:12px 14px; text-align:left; white-space:nowrap;">Novo valor</th>
+                    </tr>
+                </thead><tbody>`;
+
+            filtrados.forEach((l, i) => {
+                const c = corAcao[l.acao] || { bg: '#f5f5f5', cor: '#333', emoji: '•' };
+                const bg = i % 2 === 0 ? 'white' : '#fafafa';
+                // nome curto
+                const partes = (l.usuario||'').split(' ');
+                const nomeExib = partes.length > 2 ? `${partes[0]} ${partes[partes.length-1]}` : l.usuario;
+
+                html += `<tr style="background:${bg}; border-bottom:1px solid #f0f0f0;">
+                    <td style="padding:10px 14px; color:#666;">${l.data||'—'}</td>
+                    <td style="padding:10px 14px; color:#666; white-space:nowrap;">${l.hora||'—'}</td>
+                    <td style="padding:10px 14px; font-weight:700; color:#001F47; white-space:nowrap;">${nomeExib}</td>
+                    <td style="padding:10px 14px;">
+                        <span style="background:${c.bg}; color:${c.cor}; padding:3px 10px; border-radius:20px; font-weight:700; font-size:11px; white-space:nowrap;">${c.emoji} ${l.acao}</span>
+                    </td>
+                    <td style="padding:10px 14px; color:#555;">${l.tabela||'—'}</td>
+                    <td style="padding:10px 14px; color:#555;">${l.campo||'—'}</td>
+                    <td style="padding:10px 14px; color:#888; max-width:150px; overflow:hidden; text-overflow:ellipsis;" title="${l.valorAnterior||''}">${l.valorAnterior||'—'}</td>
+                    <td style="padding:10px 14px; font-weight:600; color:#001F47; max-width:150px; overflow:hidden; text-overflow:ellipsis;" title="${l.valorNovo||''}">${l.valorNovo||'—'}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('logsConteudo').innerHTML = html;
+        }
+
+        function exportarLogsCSV() {
+            if (logs.length === 0) { alert('Nenhum log para exportar.'); return; }
+            const header = 'Data,Hora,Usuário,Ação,Módulo,Campo,Anterior,Novo Valor\n';
+            const linhas = [...logs].reverse().map(l =>
+                `"${l.data||''}","${l.hora||''}","${l.usuario||''}","${l.acao||''}","${l.tabela||''}","${l.campo||''}","${(l.valorAnterior||'').replace(/"/g,"'")}","${(l.valorNovo||'').replace(/"/g,"'")}"`
+            ).join('\n');
+            const blob = new Blob(['\uFEFF' + header + linhas], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `CERES_logs_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        // =============================================
+        // INICIALIZAÇÃO
+        // =============================================
+
+        function formatarDataBR(dataStr) {
+            if (!dataStr) return '--';
+            const parts = dataStr.split('-');
+            if (parts.length !== 3) return dataStr;
+            const ano = String(parts[0]).slice(-2);
+            return `${parts[2]}/${parts[1]}/${ano}`;
+        }
+
+        function adicionarLog(acao, tabela, id, campo, valorAnterior, valorNovo) {
+            const agora = new Date();
+            const hora = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}:${String(agora.getSeconds()).padStart(2,'0')}`;
+            const data = formatarDataBR(agora.toISOString().split('T')[0]);
+            logs.push({ timestamp: agora.getTime(), usuario: usuarioAtual, data, hora, acao, tabela, id, campo: campo||'', valorAnterior: valorAnterior||'', valorNovo: valorNovo||'' });
+            localStorage.setItem('ceres_logs', JSON.stringify(logs));
+        }
+
+        // CORREÇÃO 4: função carregarPrecoBoisalvo que estava faltando
+        function carregarPrecoBoisalvo() {
+            const salvo = localStorage.getItem('precoBoi');
+            if (salvo) {
+                const val = parseFloat(salvo);
+                if (!isNaN(val) && val > 0) {
+                    precoBoiSp = val;
+                    const el = document.getElementById('precoBoiSp');
+                    if (el) el.textContent = 'R$ ' + precoBoiSp.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                }
+            }
+        }
+
+        function calcularCA() {
+            const qtd = parseInt(document.getElementById('qtd').value) || 0;
+            const rUnit = parseFloat(document.getElementById('rUnitario').value) || 0;
+            document.getElementById('ca').value = (qtd * rUnit).toFixed(2);
+        }
+
+        window.addEventListener('load', () => {
+            // Carregar logs sempre (mesmo antes do login, para manter histórico)
+            logs = JSON.parse(localStorage.getItem('ceres_logs') || '[]');
+
+            // Verificar se há sessão ativa (mesma aba/dia)
+            const sessaoUsuario = localStorage.getItem('ceres_session_usuario');
+            const sessaoHora = localStorage.getItem('ceres_session_hora');
+
+            if (sessaoUsuario && sessaoHora) {
+                // Validar que a sessão é do mesmo dia
+                const horaSessao = new Date(sessaoHora);
+                const agora = new Date();
+                const mesmoDia = horaSessao.toDateString() === agora.toDateString();
+
+                if (mesmoDia) {
+                    // Sessão válida — pular login
+                    usuarioAtual = sessaoUsuario;
+                    atualizarSidebarUsuario(sessaoUsuario, horaSessao);
+                    document.getElementById('telaLogin').classList.add('oculto');
+                    inicializarSistema();
+                    return;
+                }
+            }
+            // Sem sessão válida — mostrar login
+            // (telaLogin já aparece por padrão)
+        });
+
+        async function inicializarSistema() {
+            lotes = JSON.parse(localStorage.getItem('ceres_lotes') || '[]');
+            mortes = JSON.parse(localStorage.getItem('ceres_mortes') || '[]');
+            abates = JSON.parse(localStorage.getItem('ceres_abates') || '[]');
+            logs = JSON.parse(localStorage.getItem('ceres_logs') || '[]');
+
+            document.getElementById('dataEntrada').valueAsDate = new Date();
+            document.getElementById('dataMorte').valueAsDate = new Date();
+
+            carregarPrecoBoisalvo();
+            await buscarPrecoBoi();
+            popularSelects();
+            atualizarDashboard();
+            atualizarControle();
+            atualizarTabelaMortes();
+            atualizarTabelaAbate();
+        }
+
+
+
+        async function buscarPrecoBoi() {
+            try {
+                const sheetId = '1jYBSIAeotyurHsZ9pUFjik3DXToSyIaBA8YZze_XzwY';
+                const apiKey = 'AIzaSyDGuUvLZxh8Hho5SudZgNRGkb5_HuTyfWw';
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/P%C3%A1gina1!B1?key=${apiKey}`;
+                const response = await fetch(url);
+                if (!response.ok) return;
+                const data = await response.json();
+                if (data.values && data.values[0] && data.values[0][0]) {
+                    const novoPreco = parseFloat(String(data.values[0][0]).trim().replace(',', '.'));
+                    if (!isNaN(novoPreco) && novoPreco > 0) {
+                        precoBoiSp = novoPreco;
+                        const el = document.getElementById('precoBoiSp');
+                        if (el) el.textContent = 'R$ ' + precoBoiSp.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                        localStorage.setItem('precoBoi', precoBoiSp);
+                    }
+                }
+            } catch(e) { console.warn('BOI API indisponível, usando valor salvo'); }
+        }
+
+        function buscarPrecoBoiAgora() { buscarPrecoBoi(); }
+
+        function atualizarPrecoBoiManual() {
+            const input = document.getElementById('inputPrecoBoi');
+            const novoPreco = parseFloat(input.value.replace(',', '.'));
+            if (isNaN(novoPreco) || novoPreco <= 0) { alert('❌ Preço inválido!'); return; }
+            precoBoiSp = novoPreco;
+            document.getElementById('precoBoiSp').textContent = 'R$ ' + precoBoiSp.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            localStorage.setItem('precoBoi', precoBoiSp);
+            adicionarLog('EDITAR', 'SISTEMA', '-', 'Preço BOI SP', '', 'R$ ' + precoBoiSp.toLocaleString('pt-BR',{minimumFractionDigits:2}));
+            input.value = '';
+            atualizarDashboard();
+            atualizarControle();
+            atualizarPrevisoes();
+            atualizarTabelaAbate();
+            alert('✅ Preço BOI atualizado para R$ ' + precoBoiSp.toLocaleString('pt-BR', {minimumFractionDigits: 2}));
+        }
+
+        function recarregarDados() {
+            const ls = localStorage.getItem('ceres_lotes');
+            const ms = localStorage.getItem('ceres_mortes');
+            const as = localStorage.getItem('ceres_abates');
+            if (ls) lotes = JSON.parse(ls);
+            if (ms) mortes = JSON.parse(ms);
+            if (as) abates = JSON.parse(as);
+            carregarPrecoBoisalvo();
+            popularSelects();
+            atualizarDashboard();
+            atualizarControle();
+            atualizarTabelaMortes();
+            atualizarTabelaAbate();
+            alert('✅ Dados recarregados!\n\nLotes: ' + lotes.length + '\nMortes: ' + mortes.length + '\nAbates: ' + abates.length);
+        }
+
+        function adicionarLote() {
+            const nfe = document.getElementById('nfe').value?.trim();
+            const baia = document.getElementById('baia').value?.trim().toUpperCase();
+            const dataEntrada = document.getElementById('dataEntrada').value;
+            const qtd = parseInt(document.getElementById('qtd').value) || 0;
+            const rUnitario = parseFloat(document.getElementById('rUnitario').value) || 0;
+            const ca = parseFloat(document.getElementById('ca').value) || 0;
+
+            if (!nfe || !baia || !dataEntrada || qtd <= 0 || rUnitario <= 0 || ca <= 0) {
+                alert('⚠️ Preencha TODOS os campos!');
+                return;
+            }
+
+            const novoLote = { id: Date.now(), nfe, baia, dataEntrada, qtd, rUnitario, ca, baias: {[baia]: qtd}, qtdRestante: qtd };
+            lotes.push(novoLote);
+            adicionarLog('CRIAR', 'LOTES', novoLote.id, 'NFe', '', nfe);
+            localStorage.setItem('ceres_lotes', JSON.stringify(lotes));
+            alert('✅ Lote adicionado!');
+            document.getElementById('nfe').value = '';
+            document.getElementById('baia').value = '';
+            document.getElementById('qtd').value = '';
+            document.getElementById('ca').value = '';
+            document.getElementById('dataEntrada').valueAsDate = new Date();
+            popularSelects();
+            atualizarDashboard();
+            atualizarControle();
+        }
+
+        function popularSelects() {
+            let html = '<option>-- Selecione --</option>';
+            lotes.forEach(lote => {
+                Object.keys(lote.baias).forEach(baia => {
+                    if ((lote.baias[baia] || 0) > 0) {
+                        html += `<option value="${lote.nfe}|${baia}">NFe ${lote.nfe} - ${baia}</option>`;
+                    }
+                });
+            });
+            document.getElementById('nfeMortes').innerHTML = html;
+            document.getElementById('nfeAbate').innerHTML = html;
+        }
+
+        function registrarMorte() {
+            const sel = document.getElementById('nfeMortes').value;
+            if (!sel || sel === '-- Selecione --') { alert('⚠️ Selecione NFe!'); return; }
+            const [nfe, baia] = sel.split('|');
+            const qtd = parseInt(document.getElementById('qtdMorta').value) || 0;
+            const data = document.getElementById('dataMorte').value;
+            if (qtd <= 0 || !data) { alert('⚠️ Preencha todos os campos!'); return; }
+            const lote = lotes.find(l => l.nfe === nfe && l.baias[baia] !== undefined);
+            if (!lote || (lote.baias[baia] || 0) < qtd) { alert('⚠️ Quantidade inválida!'); return; }
+            const dias = Math.ceil((new Date(data) - new Date(lote.dataEntrada)) / (1000*60*60*24));
+            const ca = (qtd / lote.qtd) * lote.ca;
+            const juros = ca * (Math.pow(1.0195, dias/30) - 1);
+            mortes.push({ nfe, baia, qtd, data, ca, juros, total: ca + juros });
+            lote.baias[baia] -= qtd;
+            lote.qtdRestante = (lote.qtdRestante || lote.qtd) - qtd;
+            adicionarLog('CRIAR', 'MORTES', Date.now(), `NFe ${nfe} / ${baia}`, '', `${qtd} animais em ${data}`);
+            localStorage.setItem('ceres_lotes', JSON.stringify(lotes));
+            localStorage.setItem('ceres_mortes', JSON.stringify(mortes));
+            alert('✅ Morte registrada!');
+            document.getElementById('nfeMortes').value = '-- Selecione --';
+            document.getElementById('qtdMorta').value = '1';
+            atualizarTabelaMortes();
+            popularSelects();
+            atualizarDashboard();
+        }
+
+        function atualizarTabelaMortes() {
+            const filterNF = document.getElementById('filterMortesNFe')?.value.toLowerCase() || '';
+            const filterBaia = document.getElementById('filterMortesBaia')?.value.toLowerCase() || '';
+            const filterDataDe = document.getElementById('filterMortesDataDe')?.value || '';
+            const filterDataAte = document.getElementById('filterMortesDataAte')?.value || '';
+            let filtradas = mortes.filter(m => {
+                if (filterNF && !m.nfe.toLowerCase().includes(filterNF)) return false;
+                if (filterBaia && !m.baia.toLowerCase().includes(filterBaia)) return false;
+                if (filterDataDe && m.data < filterDataDe) return false;
+                if (filterDataAte && m.data > filterDataAte) return false;
+                return true;
+            });
+            if (filtradas.length === 0) { document.getElementById('tabelaMortes').innerHTML = '<div class="empty">📭 Nenhuma morte encontrada</div>'; return; }
+            let html = '<div class="table-scroll-wrapper"><table><tr style="background:#003D87; color:white;"><th>Data</th><th>NFe</th><th>Baía</th><th>Qtd</th><th>C.A.</th><th>Juros</th><th>Total</th><th>Ação</th></tr>';
+            filtradas.forEach(m => {
+                const idxReal = mortes.indexOf(m);
+                html += `<tr><td>${formatarDataBR(m.data)}</td><td>${m.nfe}</td><td><strong>${m.baia}</strong></td><td>${m.qtd}</td><td>R$ ${m.ca.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td><td>R$ ${m.juros.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td><td><strong>R$ ${m.total.toLocaleString('pt-BR',{minimumFractionDigits:2})}</strong></td><td><button onclick="editarMorte(${idxReal})" style="background:#0066cc;color:white;border:none;padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px;margin-right:3px;">✏️</button><button onclick="deletarMorte(${idxReal})" style="background:#dc3545;color:white;border:none;padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px;">🗑️</button></td></tr>`;
+            });
+            html += '</table></div>';
+            document.getElementById('tabelaMortes').innerHTML = html;
+        }
+
+        function editarMorte(idx) {
+            const morte = mortes[idx];
+            const novaQtd = prompt('Qtd:', morte.qtd);
+            if (novaQtd !== null && parseInt(novaQtd) !== morte.qtd) {
+                adicionarLog('EDITAR', 'MORTES', idx, 'Qtd', morte.qtd, novaQtd);
+                morte.qtd = parseInt(novaQtd);
+            }
+            localStorage.setItem('ceres_mortes', JSON.stringify(mortes));
+            alert('✅ Morte editada!');
+            atualizarTabelaMortes();
+        }
+
+        function deletarMorte(idx) {
+            if (confirm('⚠️ Deletar esta morte?')) {
+                adicionarLog('DELETAR', 'MORTES', idx, 'NFe/Baia', `${mortes[idx].nfe}/${mortes[idx].baia}`, '');
+                mortes.splice(idx, 1);
+                localStorage.setItem('ceres_mortes', JSON.stringify(mortes));
+                atualizarTabelaMortes();
+                atualizarDashboard();
+            }
+        }
+
+        function atualizarPrevisoes() {
+            const filterNF = document.getElementById('filterPrevNFe')?.value.toLowerCase() || '';
+            const filterBaia = document.getElementById('filterPrevBaia')?.value.toLowerCase() || '';
+            const filterStatus = document.getElementById('filterPrevStatus')?.value || '';
+            let dados = [];
+            lotes.forEach((lote, loteIdx) => {
+                Object.entries(lote.baias).forEach(([baia, qtd]) => {
+                    if (!qtd || qtd <= 0) return;
+                    const dataEntrada = new Date(lote.dataEntrada);
+                    const hoje = new Date();
+                    const diasCorridos = Math.ceil((hoje - dataEntrada) / (1000*60*60*24));
+                    let status = diasCorridos <= 90 ? 'verde' : diasCorridos <= 100 ? 'amarelo' : 'vermelho';
+                    if (filterNF && !lote.nfe.toLowerCase().includes(filterNF)) return;
+                    if (filterBaia && !baia.toLowerCase().includes(filterBaia)) return;
+                    if (filterStatus && status !== filterStatus) return;
+                    const ca = (qtd / lote.qtd) * lote.ca;
+                    const dataSaidaCustom = localStorage.getItem(`dataSaida_${lote.nfe}_${baia}`);
+                    const dataSaida = dataSaidaCustom || new Date(dataEntrada.getTime() + 105*24*60*60*1000).toISOString().split('T')[0];
+                    const dataSaidaObj = new Date(dataSaida);
+                    const ciclo = Math.ceil((dataSaidaObj - dataEntrada) / (1000*60*60*24));
+                    const juros = ca * (Math.pow(1.0195, ciclo/30) - 1);
+                    const taxaCO = ca * 0.0025;
+                    const totalOp = ca + juros + taxaCO;
+                    const arrobas = qtd * 19.5;
+                    const valorAbate = arrobas * precoBoiSp;
+                    const lucro = valorAbate - totalOp;
+                    dados.push({ nfe: lote.nfe, baia, qtd, precoMedio: lote.rUnitario, dataEntrada: lote.dataEntrada, dataSaida, ciclo, ca, juros, taxaCO, totalOp, arrobas, valorAbate, lucro, diasCorridos, status, loteIdx });
+                });
+            });
+            if (dados.length === 0) { document.getElementById('tabelaPrevisoes').innerHTML = '<div class="empty">📭 Nenhuma previsão</div>'; return; }
+            dados.sort((a, b) => { const o = {vermelho:0, amarelo:1, verde:2}; return o[a.status] - o[b.status]; });
+            let html = '<table style="font-size:12px; min-width:1400px;"><tr style="background:#003D87; color:white;"><th>Status</th><th>NF</th><th>Baía</th><th>Qtd</th><th>Preço/Un</th><th>Data Entrada</th><th>Data Saída ✏️</th><th>Ciclo</th><th>Dias Corridos</th><th>C.A.</th><th>Juros</th><th>Taxa CO</th><th>Total Op</th><th>Valor Abate*</th><th>Lucro Est.*</th><th>Ação</th></tr>';
+            dados.forEach(d => {
+                const cores = {vermelho:'#ff6b6b', amarelo:'#ffd93d', verde:'#6bcf7f'};
+                const emoji = {vermelho:'🔴', amarelo:'🟡', verde:'🟢'};
+                html += `<tr style="background-color:${cores[d.status]}20; border-left:4px solid ${cores[d.status]};">
+                    <td style="text-align:center; font-weight:700;">${emoji[d.status]}</td>
+                    <td><strong>${d.nfe}</strong></td>
+                    <td><strong>${d.baia}</strong></td>
+                    <td>${d.qtd}</td>
+                    <td>R$ ${d.precoMedio.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td>${formatarDataBR(d.dataEntrada)}</td>
+                    <td><input type="date" value="${d.dataSaida}" onchange="salvarDataSaida('${d.nfe}','${d.baia}',this.value); atualizarPrevisoes();" style="width:130px; padding:4px; border:1px solid #00A651; border-radius:3px; margin-bottom:0;"></td>
+                    <td>${d.ciclo}d</td>
+                    <td style="font-weight:700;">${d.diasCorridos}d</td>
+                    <td>R$ ${d.ca.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td>R$ ${d.juros.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td>R$ ${d.taxaCO.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td>R$ ${d.totalOp.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td>R$ ${d.valorAbate.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td style="font-weight:700; color:${d.lucro>=0?'#00A651':'#dc3545'};">R$ ${d.lucro.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td><button onclick="deletarPrevisao(${d.loteIdx},'${d.baia}')" style="background:#dc3545;color:white;border:none;padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px;">🗑️</button></td>
+                </tr>`;
+            });
+            html += '</table><p style="font-size:11px; margin-top:10px; color:#666;">⏱️ <strong>DIAS CORRIDOS</strong> = Data Atual - Data Entrada | <strong>CICLO</strong> = Data Saída - Data Entrada | *Lucro = Valor Abate - Total Op</p>';
+            document.getElementById('tabelaPrevisoes').innerHTML = html;
+        }
+
+        function salvarDataSaida(nfe, baia, novaData) {
+            localStorage.setItem(`dataSaida_${nfe}_${baia}`, novaData);
+        }
+
+        function deletarPrevisao(loteIdx, baia) {
+            if (confirm(`Deletar lote ${lotes[loteIdx].nfe} / baía ${baia}?`)) {
+                localStorage.removeItem(`dataSaida_${lotes[loteIdx].nfe}_${baia}`);
+                delete lotes[loteIdx].baias[baia];
+                if (Object.keys(lotes[loteIdx].baias).length === 0) lotes.splice(loteIdx, 1);
+                localStorage.setItem('ceres_lotes', JSON.stringify(lotes));
+                atualizarDashboard();
+                atualizarPrevisoes();
+            }
+        }
+
+        function carregarBaiasAbate() {
+            const sel = document.getElementById('nfeAbate').value;
+            const container = document.getElementById('baiasAbateContainer');
+            if (!sel || sel === '-- Selecione --') { container.innerHTML = ''; return; }
+            const [nfe, baiaFiltro] = sel.split('|');
+            const lote = lotes.find(l => l.nfe === nfe);
+            if (!lote) return;
+            document.getElementById('precoArroba').value = precoBoiSp.toFixed(2);
+            let html = '';
+            Object.entries(lote.baias).forEach(([baia, qtd]) => {
+                if (qtd > 0) html += `<div style="margin-bottom:15px;"><label>${baia} (Max: ${qtd})</label><input type="number" class="baia-abate" data-baia="${baia}" min="0" max="${qtd}" value="0"></div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function executarAbate() {
+            const sel = document.getElementById('nfeAbate').value;
+            const frigorifico = document.getElementById('frigorificoAbate').value;
+            const rendimentoCarcaca = parseFloat(document.getElementById('rendimentoCarcaca').value) || 60;
+            const observacoes = document.getElementById('observacoesAbate').value || '';
+            if (!sel || sel === '-- Selecione --') { alert('⚠️ Selecione NFe!'); return; }
+            if (!frigorifico) { alert('⚠️ Selecione o Frigorífico!'); return; }
+            const nfe = sel.split('|')[0];
+            const lote = lotes.find(l => l.nfe === nfe);
+            let totalAbate = 0;
+            document.querySelectorAll('.baia-abate').forEach(input => { totalAbate += parseInt(input.value) || 0; });
+            const arrobasReais = parseFloat(document.getElementById('arrobasReais').value) || 0;
+            const precoArroba = parseFloat(document.getElementById('precoArroba').value) || precoBoiSp;
+            if (totalAbate === 0 || arrobasReais <= 0 || precoArroba <= 0) { alert('⚠️ Preencha quantidade, arrobas e preço!'); return; }
+            const proporcao = totalAbate / lote.qtd;
+            const ca = proporcao * lote.ca;
+            const dataEntrada = new Date(lote.dataEntrada);
+            const dias = Math.ceil((new Date() - dataEntrada) / (1000*60*60*24));
+            const juros = ca * (Math.pow(1.0195, dias/30) - 1);
+            const taxaCO = ca * 0.0025;
+            const faturamento = arrobasReais * precoArroba;
+            const lucroFinal = faturamento - ca - juros - taxaCO;
+            abates.push({ nfe, frigorifico, rendimentoCarcaca, observacoes, dataAbate: new Date().toISOString().split('T')[0], qtd: totalAbate, arrobas: arrobasReais, precoArroba, faturamento, ca, juros, taxaCO, lucro: lucroFinal });
+            adicionarLog('CRIAR', 'ABATES', Date.now(), `NFe ${nfe} / ${frigorifico}`, '', `${totalAbate} animais | ${arrobasReais}@ | R$ ${faturamento.toLocaleString('pt-BR',{minimumFractionDigits:2})}`);
+            document.querySelectorAll('.baia-abate').forEach(input => {
+                const baia = input.dataset.baia;
+                const qtdAbatida = parseInt(input.value) || 0;
+                if (lote.baias[baia] !== undefined) lote.baias[baia] = Math.max(0, (lote.baias[baia]||0) - qtdAbatida);
+            });
+            lote.qtdRestante = (lote.qtdRestante || lote.qtd) - totalAbate;
+            localStorage.setItem('ceres_abates', JSON.stringify(abates));
+            localStorage.setItem('ceres_lotes', JSON.stringify(lotes));
+            alert('✅ Abate registrado!');
+            document.getElementById('nfeAbate').value = '-- Selecione --';
+            document.getElementById('baiasAbateContainer').innerHTML = '';
+            document.getElementById('arrobasReais').value = '';
+            popularSelects();
+            atualizarTabelaAbate();
+            atualizarDashboard();
+        }
+
+        function atualizarTabelaAbate() {
+            const filterNF = document.getElementById('filterAbateNFe')?.value.toLowerCase() || '';
+            const filterFrig = document.getElementById('filterAbateFrig')?.value.toLowerCase() || '';
+            const filterDataDe = document.getElementById('filterAbateDataDe')?.value || '';
+            const filterDataAte = document.getElementById('filterAbateDataAte')?.value || '';
+            let filtrados = abates.filter(a => {
+                if (filterNF && !a.nfe.toLowerCase().includes(filterNF)) return false;
+                if (filterFrig && !(a.frigorifico||'').toLowerCase().includes(filterFrig)) return false;
+                if (filterDataDe && a.dataAbate < filterDataDe) return false;
+                if (filterDataAte && a.dataAbate > filterDataAte) return false;
+                return true;
+            });
+            if (filtrados.length === 0) { document.getElementById('tabelaAbate').innerHTML = '<div class="empty">📭 Nenhum abate encontrado</div>'; return; }
+            let html = '<table style="font-size:12px; min-width:1100px;"><tr style="background:#003D87; color:white;"><th>Data</th><th>NFe</th><th>Frigorífico</th><th>Qtd</th><th>Arrobas</th><th>Preço @</th><th>Rendimento %</th><th>Faturamento</th><th>C.A.</th><th>Juros</th><th>Taxa CO</th><th>Lucro</th><th>Obs.</th><th>Ação</th></tr>';
+            filtrados.forEach(a => {
+                const corLucro = a.lucro >= 0 ? '#6bcf7f' : '#ff6b6b';
+                const obsPreview = (a.observacoes||'---').substring(0,20) + ((a.observacoes||'').length > 20 ? '...' : '');
+                html += `<tr>
+                    <td>${formatarDataBR(a.dataAbate)}</td>
+                    <td><strong>${a.nfe}</strong></td>
+                    <td><strong>${a.frigorifico||'---'}</strong></td>
+                    <td>${a.qtd}</td>
+                    <td>${a.arrobas.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td>R$ ${a.precoArroba.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td>${(a.rendimentoCarcaca||60).toFixed(2)}%</td>
+                    <td>R$ ${a.faturamento.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td>R$ ${a.ca.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td>R$ ${a.juros.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td>R$ ${a.taxaCO.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td style="font-weight:700; color:${corLucro};">R$ ${a.lucro.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+                    <td title="${a.observacoes||'Sem obs'}">${obsPreview}</td>
+                    <td style="min-width:90px;">
+                        <button onclick="editarAbate(${abates.indexOf(a)})" style="background:#0066cc;color:white;border:none;padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px;margin-right:3px;">✏️</button>
+                        <button onclick="deletarAbate(${abates.indexOf(a)})" style="background:#dc3545;color:white;border:none;padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px;">🗑️</button>
+                    </td>
+                </tr>`;
+            });
+            html += '</table>';
+            document.getElementById('tabelaAbate').innerHTML = html;
+        }
+
+        function editarAbate(idx) {
+            const abate = abates[idx];
+            const novaQtd = prompt('Qtd:', abate.qtd);
+            if (novaQtd !== null && parseInt(novaQtd) !== abate.qtd) {
+                adicionarLog('EDITAR','ABATES',idx,'Qtd',abate.qtd,novaQtd);
+                abate.qtd = parseInt(novaQtd);
+            }
+            const novasArrobas = prompt('Arrobas:', abate.arrobas);
+            if (novasArrobas !== null && parseFloat(novasArrobas) !== abate.arrobas) {
+                adicionarLog('EDITAR','ABATES',idx,'Arrobas',abate.arrobas,novasArrobas);
+                abate.arrobas = parseFloat(novasArrobas);
+                abate.faturamento = abate.arrobas * abate.precoArroba;
+                abate.lucro = abate.faturamento - abate.ca - abate.juros - abate.taxaCO;
+            }
+            localStorage.setItem('ceres_abates', JSON.stringify(abates));
+            alert('✅ Abate editado!');
+            atualizarTabelaAbate();
+        }
+
+        function deletarAbate(idx) {
+            if (confirm('⚠️ Deletar este abate?')) {
+                adicionarLog('DELETAR', 'ABATES', idx, 'NFe', abates[idx].nfe, '');
+                abates.splice(idx, 1);
+                localStorage.setItem('ceres_abates', JSON.stringify(abates));
+                atualizarTabelaAbate();
+                atualizarDashboard();
+            }
+        }
+
+        function atualizarControle() {
+            const nfeFilter = document.getElementById('filterNFe')?.value.toLowerCase() || '';
+            const baiaFilter = document.getElementById('filterBaia')?.value.toLowerCase() || '';
+            const dataInicioFilter = document.getElementById('filterDataInicio')?.value || '';
+            const dataFimFilter = document.getElementById('filterDataFim')?.value || '';
+            const cicloMinFilter = parseInt(document.getElementById('filterCicloMin')?.value) || 0;
+            let linhas = [];
+            lotes.forEach((lote, loteIdx) => {
+                Object.entries(lote.baias).forEach(([baia, qtd]) => {
+                    if (!qtd || qtd <= 0) return;
+                    const dias = Math.ceil((new Date() - new Date(lote.dataEntrada)) / (1000*60*60*24));
+                    const ca = (qtd / lote.qtd) * lote.ca;
+                    const juros = ca * (Math.pow(1.0195, dias/30) - 1);
+                    if (nfeFilter && !lote.nfe.toLowerCase().includes(nfeFilter)) return;
+                    if (baiaFilter && !baia.toLowerCase().includes(baiaFilter)) return;
+                    if (cicloMinFilter > 0 && dias < cicloMinFilter) return;
+                    if (dataInicioFilter && lote.dataEntrada < dataInicioFilter) return;
+                    if (dataFimFilter && lote.dataEntrada > dataFimFilter) return;
+                    linhas.push({ nfe: lote.nfe, baia, qtd, ca, juros, dias, dataEntrada: formatarDataBR(lote.dataEntrada), loteIdx, id: lote.id });
+                });
+            });
+
+            if (linhas.length === 0) {
+                document.getElementById('tabelaControle').innerHTML = '<div class="empty">📭 Sem lotes</div>';
+                document.getElementById('baiasEmUso').innerHTML = '<div class="empty" style="grid-column:span 100;">📭 Nenhuma baía em uso</div>';
+                return;
+            }
+
+            const baiasUnicas = new Set(linhas.map(l => l.baia));
+            let baiasHTML = '';
+            Array.from(baiasUnicas).sort().forEach(baia => {
+                const qtdNaBaia = linhas.filter(l => l.baia === baia).reduce((a, l) => a + l.qtd, 0);
+                const nfeDaBaia = linhas.find(l => l.baia === baia)?.nfe;
+                baiasHTML += `<div style="background:#00A651; color:white; padding:12px; border-radius:6px; text-align:center; font-weight:700; cursor:pointer; transition:all 0.3s; border:2px solid transparent;" onmouseover="this.style.transform='scale(1.05)'; this.style.borderColor='white';" onmouseout="this.style.transform='scale(1)'; this.style.borderColor='transparent';" onclick="abrirModalBaia('${baia}', '${nfeDaBaia}')">
+                    <div style="font-size:16px; margin-bottom:5px;">${baia}</div>
+                    <div style="font-size:12px; opacity:0.9;">${qtdNaBaia} animais</div>
+                </div>`;
+            });
+            document.getElementById('baiasEmUso').innerHTML = baiasHTML;
+
+            let html = '<div class="table-scroll-wrapper"><table style="font-size:12px;"><tr style="background:#003D87; color:white;"><th>Data</th><th>NFe</th><th>Baia</th><th>Qtd</th><th>C.A.</th><th>Dias</th><th>Juros</th><th>Ação</th></tr>';
+            linhas.forEach(l => {
+                html += `<tr><td>${l.dataEntrada}</td><td><strong>${l.nfe}</strong></td><td style="cursor:pointer; color:#00A651; font-weight:700; text-decoration:underline;" onclick="abrirModalBaia('${l.baia}','${l.nfe}')" title="Clique para ver detalhes"><strong>${l.baia}</strong></td><td>${l.qtd}</td><td>R$ ${l.ca.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td><td style="font-weight:700;">${l.dias}d</td><td>R$ ${l.juros.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td><td><button onclick="editarLote(${l.loteIdx})" style="background:#0066cc;color:white;border:none;padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px;margin-right:3px;">✏️</button><button onclick="deletarLote(${l.loteIdx})" style="background:#dc3545;color:white;border:none;padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px;">🗑️</button></td></tr>`;
+            });
+            html += '</table></div>';
+            document.getElementById('tabelaControle').innerHTML = html;
+        }
+
+        function editarLote(idx) {
+            const lote = lotes[idx];
+            const novoNFe = prompt('NFe:', lote.nfe);
+            if (novoNFe === null || !novoNFe.trim()) return;
+            if (lote.nfe !== novoNFe.trim()) { adicionarLog('EDITAR','LOTES',lote.id,'NFe',lote.nfe,novoNFe); lote.nfe = novoNFe.trim(); }
+            const baiasKeys = Object.keys(lote.baias);
+            const novaBaia = prompt('Baia:', baiasKeys[0]);
+            if (novaBaia && novaBaia !== baiasKeys[0]) {
+                const qtd = lote.baias[baiasKeys[0]];
+                delete lote.baias[baiasKeys[0]];
+                lote.baias[novaBaia.toUpperCase()] = qtd;
+                lote.baia = novaBaia.toUpperCase();
+            }
+            const novaQtd = prompt('Qtd:', lote.qtd);
+            if (novaQtd !== null && parseInt(novaQtd) !== lote.qtd) { adicionarLog('EDITAR','LOTES',lote.id,'Qtd',lote.qtd,novaQtd); lote.qtd = parseInt(novaQtd); }
+            localStorage.setItem('ceres_lotes', JSON.stringify(lotes));
+            alert('✅ Lote editado!');
+            popularSelects();
+            atualizarControle();
+            atualizarDashboard();
+        }
+
+        function deletarLote(idx) {
+            if (confirm('⚠️ Deletar este lote?')) {
+                adicionarLog('DELETAR', 'LOTES', lotes[idx].id, 'NFe', lotes[idx].nfe, '');
+                lotes.splice(idx, 1);
+                localStorage.setItem('ceres_lotes', JSON.stringify(lotes));
+                popularSelects();
+                atualizarControle();
+                atualizarDashboard();
+            }
+        }
+
+        function atualizarDashboard() {
+            let totalCA=0, totalJuros=0, totalTaxaCO=0, totalAnimais=0, diasMedios=[], faturamentoTotal=0, lucroTotal=0;
+            lotes.forEach(lote => {
+                const dias = Math.ceil((new Date() - new Date(lote.dataEntrada)) / (1000*60*60*24));
+                const juros = lote.ca * (Math.pow(1.0195, dias/30) - 1);
+                const taxaCO = lote.ca * 0.0025;
+                totalCA += lote.ca;
+                totalJuros += juros;
+                totalTaxaCO += taxaCO;
+                totalAnimais += lote.qtd;
+                diasMedios.push(dias);
+            });
+            abates.forEach(a => { faturamentoTotal += a.faturamento; lucroTotal += a.lucro; });
+            const diasMediana = diasMedios.length > 0 ? Math.round(diasMedios.reduce((a,b)=>a+b,0)/diasMedios.length) : 0;
+            const mediaAbates = abates.length > 0 ? (totalAnimais / abates.length).toFixed(0) : 0;
+
+            document.getElementById('totalLotes').textContent = lotes.length;
+            document.getElementById('totalCA').textContent = 'R$ ' + totalCA.toLocaleString('pt-BR',{minimumFractionDigits:2});
+            document.getElementById('totalJuros').textContent = 'R$ ' + totalJuros.toLocaleString('pt-BR',{minimumFractionDigits:2});
+
+            let dashHTML = `
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-top:20px;">
+                    <div style="background:#f5f5f5; padding:15px; border-radius:8px; border-left:4px solid #003D87;">
+                        <div style="font-size:12px; color:#666; font-weight:700; text-transform:uppercase;">ANIMAIS EM CONFINAMENTO</div>
+                        <div style="font-size:28px; font-weight:900; color:#003D87; margin-top:10px;">${totalAnimais}</div>
+                        <div style="font-size:11px; color:#999; margin-top:5px;">Média por lote: ${(totalAnimais/Math.max(lotes.length,1)).toFixed(0)}</div>
+                    </div>
+                    <div style="background:#f5f5f5; padding:15px; border-radius:8px; border-left:4px solid #00A651;">
+                        <div style="font-size:12px; color:#666; font-weight:700; text-transform:uppercase;">TAXA CO + JUROS</div>
+                        <div style="font-size:28px; font-weight:900; color:#00A651; margin-top:10px;">R$ ${(totalTaxaCO+totalJuros).toLocaleString('pt-BR',{minimumFractionDigits:0})}</div>
+                        <div style="font-size:11px; color:#999; margin-top:5px;">Juros: R$ ${totalJuros.toLocaleString('pt-BR',{minimumFractionDigits:0})}</div>
+                    </div>
+                    <div style="background:#f5f5f5; padding:15px; border-radius:8px; border-left:4px solid #FDB913;">
+                        <div style="font-size:12px; color:#666; font-weight:700; text-transform:uppercase;">ABATES REALIZADOS</div>
+                        <div style="font-size:28px; font-weight:900; color:#FDB913; margin-top:10px;">${abates.length}</div>
+                        <div style="font-size:11px; color:#999; margin-top:5px;">Média: ${mediaAbates} animais</div>
+                    </div>
+                    <div style="background:#f5f5f5; padding:15px; border-radius:8px; border-left:4px solid #6bcf7f;">
+                        <div style="font-size:12px; color:#666; font-weight:700; text-transform:uppercase;">FATURAMENTO TOTAL</div>
+                        <div style="font-size:28px; font-weight:900; color:#6bcf7f; margin-top:10px;">R$ ${faturamentoTotal.toLocaleString('pt-BR',{minimumFractionDigits:0})}</div>
+                        <div style="font-size:11px; color:#999; margin-top:5px;">Lucro: R$ ${lucroTotal.toLocaleString('pt-BR',{minimumFractionDigits:0})}</div>
+                    </div>
+                </div>
+                <h3 style="margin-top:30px; color:#003D87; font-weight:700;">📊 ABATES POR FRIGORÍFICO</h3>
+                <div id="dashAbatesFrig" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px;"></div>
+                <h3 style="margin-top:30px; color:#003D87; font-weight:700;">⚠️ MORTES REGISTRADAS</h3>
+                <div id="dashMortes" style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px;"></div>
+                <h3 style="margin-top:30px; color:#003D87; font-weight:700;">⏱️ INFORMAÇÕES DE TEMPO</h3>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:10px;">
+                    <div style="background:#f5f5f5; padding:15px; border-radius:8px;">
+                        <div style="font-size:12px; color:#666; font-weight:700;">CICLO MÉDIO</div>
+                        <div style="font-size:24px; font-weight:900; color:#003D87; margin-top:10px;">${diasMediana}d</div>
+                    </div>
+                    <div style="background:#f5f5f5; padding:15px; border-radius:8px;">
+                        <div style="font-size:12px; color:#666; font-weight:700;">DIAS EM CONFINAMENTO (MÁX)</div>
+                        <div style="font-size:24px; font-weight:900; color:#003D87; margin-top:10px;">${diasMedios.length > 0 ? Math.max(...diasMedios) : 0}d</div>
+                    </div>
+                    <div style="background:#f5f5f5; padding:15px; border-radius:8px;">
+                        <div style="font-size:12px; color:#666; font-weight:700;">PREÇO BOI HOJE</div>
+                        <div style="font-size:24px; font-weight:900; color:#00A651; margin-top:10px;">R$ ${precoBoiSp.toFixed(2)}</div>
+                    </div>
+                </div>`;
+
+            const dashContainer = document.getElementById('dashboard');
+            if (dashContainer) {
+                const existing = dashContainer.querySelector('#dashExtendido');
+                if (existing) existing.remove();
+                const div = document.createElement('div');
+                div.id = 'dashExtendido';
+                div.innerHTML = dashHTML;
+                dashContainer.appendChild(div);
+            }
+
+            const frigoStats = {};
+            abates.forEach(a => {
+                const frig = a.frigorifico || 'Sem Frigorífico';
+                if (!frigoStats[frig]) frigoStats[frig] = {qtd:0, faturamento:0};
+                frigoStats[frig].qtd += a.qtd;
+                frigoStats[frig].faturamento += a.faturamento;
+            });
+            let frigHTML = '';
+            Object.entries(frigoStats).forEach(([frig, stats]) => {
+                frigHTML += `<div style="background:#f5f5f5; padding:12px; border-radius:6px; border-left:3px solid #00A651;"><div style="font-weight:700; color:#003D87;">${frig}</div><div style="font-size:12px; color:#666; margin-top:5px;">${stats.qtd} animais | R$ ${stats.faturamento.toLocaleString('pt-BR',{minimumFractionDigits:0})}</div></div>`;
+            });
+            const frigContainer = document.getElementById('dashAbatesFrig');
+            if (frigContainer) frigContainer.innerHTML = frigHTML || '<p style="color:#999;">Sem abates registrados</p>';
+
+            const mortesInfo = { total: mortes.length, totalQtd: mortes.reduce((a,m)=>a+m.qtd,0), totalCusto: mortes.reduce((a,m)=>a+m.total,0) };
+            const mortesContainer = document.getElementById('dashMortes');
+            if (mortesContainer) mortesContainer.innerHTML = `
+                <div style="background:#f5f5f5; padding:12px; border-radius:6px; border-left:3px solid #dc3545;"><div style="font-weight:700; color:#003D87;">REGISTROS DE MORTE</div><div style="font-size:12px; color:#666; margin-top:5px;">${mortesInfo.total} eventos | ${mortesInfo.totalQtd} animais</div></div>
+                <div style="background:#f5f5f5; padding:12px; border-radius:6px; border-left:3px solid #ff9800;"><div style="font-weight:700; color:#003D87;">CUSTO DE MORTES</div><div style="font-size:12px; color:#666; margin-top:5px;">R$ ${mortesInfo.totalCusto.toLocaleString('pt-BR',{minimumFractionDigits:0})}</div></div>`;
+        }
+
+        function mudarAba(abaNome, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(abaNome).classList.add('active');
+            if (btn) btn.classList.add('active');
+            // Atualizar previsões ao entrar na aba
+            if (abaNome === 'previsoes') atualizarPrevisoes();
+        }
+
+        // CORREÇÃO 1: Modal baía com lógica robusta
+        function abrirModalBaia(baia, nfe) {
+            // Busca lote que contenha a baia específica E o nfe
+            let lote = lotes.find(l => l.nfe === nfe && l.baias.hasOwnProperty(baia));
+            // Fallback: busca qualquer lote que tenha essa baia
+            if (!lote) lote = lotes.find(l => l.baias.hasOwnProperty(baia));
+            if (!lote) { console.warn('Lote não encontrado para baia:', baia, 'nfe:', nfe); return; }
+
+            const qtd = lote.baias[baia];
+            if (qtd === undefined || qtd === null) { console.warn('Qtd undefined para baia:', baia); return; }
+
+            document.getElementById('modalBaiaNome').textContent = `${baia} • NF ${lote.nfe}`;
+
+            const dias = Math.ceil((new Date() - new Date(lote.dataEntrada)) / (1000*60*60*24));
+            const ca = (qtd / lote.qtd) * lote.ca;
+            const juros = ca * (Math.pow(1.0195, dias/30) - 1);
+            const taxaCO = ca * 0.0025;
+            const arrobas = qtd * 19.5;
+            const valorAbate = arrobas * precoBoiSp;
+            const lucro = valorAbate - (ca + juros + taxaCO);
+
+            const mortesNaBaia = mortes.filter(m => m.baia === baia && m.nfe === lote.nfe);
+            const totalMortes = mortesNaBaia.reduce((a, m) => a + m.qtd, 0);
+
+            let html = `
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+                    <div style="background:#e8f5e9; padding:20px; border-radius:8px; border-left:5px solid #00A651;">
+                        <div style="font-size:12px; color:#666; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Informações Gerais</div>
+                        <table style="width:100%;">
+                            <tr><td style="padding:6px; font-weight:700; color:#666; width:50%;">Data Entrada:</td><td style="padding:6px;"><strong>${formatarDataBR(lote.dataEntrada)}</strong></td></tr>
+                            <tr><td style="padding:6px; font-weight:700; color:#666;">Nota Fiscal:</td><td style="padding:6px;"><strong>${lote.nfe}</strong></td></tr>
+                            <tr><td style="padding:6px; font-weight:700; color:#666;">Quantidade:</td><td style="padding:6px;"><strong>${qtd} animais</strong></td></tr>
+                            <tr><td style="padding:6px; font-weight:700; color:#666;">Dias Corridos:</td><td style="padding:6px;"><strong style="color:#00A651;">${dias}d</strong></td></tr>
+                            <tr><td style="padding:6px; font-weight:700; color:#666;">Preço/Un:</td><td style="padding:6px;">R$ ${lote.rUnitario.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td></tr>
+                            <tr><td style="padding:6px; font-weight:700; color:#666;">Preço BOI:</td><td style="padding:6px;"><strong>R$ ${precoBoiSp.toFixed(2)}</strong></td></tr>
+                        </table>
+                    </div>
+                    <div style="background:#e3f2fd; padding:20px; border-radius:8px; border-left:5px solid #003D87;">
+                        <div style="font-size:12px; color:#666; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Valores Financeiros</div>
+                        <table style="width:100%;">
+                            <tr><td style="padding:6px; font-weight:700; color:#666; width:50%;">C.A.:</td><td style="padding:6px;"><strong>R$ ${ca.toLocaleString('pt-BR',{minimumFractionDigits:2})}</strong></td></tr>
+                            <tr><td style="padding:6px; font-weight:700; color:#666;">Juros (${dias}d):</td><td style="padding:6px;">R$ ${juros.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td></tr>
+                            <tr><td style="padding:6px; font-weight:700; color:#666;">Taxa CO:</td><td style="padding:6px;">R$ ${taxaCO.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td></tr>
+                            <tr style="background:#dbe8f5;"><td style="padding:6px; font-weight:700; color:#003D87;">TOTAL OP:</td><td style="padding:6px;"><strong style="color:#003D87; font-size:16px;">R$ ${(ca+juros+taxaCO).toLocaleString('pt-BR',{minimumFractionDigits:2})}</strong></td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:20px;">
+                    <div style="background:#fff3e0; padding:15px; border-radius:8px; text-align:center; border-left:4px solid #FDB913;">
+                        <div style="font-size:11px; color:#666; font-weight:700; text-transform:uppercase;">Arrobas Est.</div>
+                        <div style="font-size:24px; font-weight:900; color:#FDB913; margin-top:8px;">${arrobas.toFixed(1)}<span style="font-size:14px;">@</span></div>
+                    </div>
+                    <div style="background:#f3e5f5; padding:15px; border-radius:8px; text-align:center; border-left:4px solid #9c27b0;">
+                        <div style="font-size:11px; color:#666; font-weight:700; text-transform:uppercase;">Valor Abate*</div>
+                        <div style="font-size:20px; font-weight:900; color:#9c27b0; margin-top:8px;">R$ ${valorAbate.toLocaleString('pt-BR',{minimumFractionDigits:0})}</div>
+                    </div>
+                    <div style="background:#fce4ec; padding:15px; border-radius:8px; text-align:center; border-left:4px solid #e91e63;">
+                        <div style="font-size:11px; color:#666; font-weight:700; text-transform:uppercase;">Lucro Est.*</div>
+                        <div style="font-size:20px; font-weight:900; color:${lucro>=0?'#00A651':'#dc3545'}; margin-top:8px;">R$ ${lucro.toLocaleString('pt-BR',{minimumFractionDigits:0})}</div>
+                    </div>
+                    <div style="background:#ffe0b2; padding:15px; border-radius:8px; text-align:center; border-left:4px solid #ff9800;">
+                        <div style="font-size:11px; color:#666; font-weight:700; text-transform:uppercase;">Mortes</div>
+                        <div style="font-size:24px; font-weight:900; color:#ff9800; margin-top:8px;">${totalMortes}</div>
+                    </div>
+                </div>
+                ${mortesNaBaia.length > 0 ? `
+                    <div style="background:#ffebee; padding:15px; border-radius:8px; border-left:4px solid #dc3545;">
+                        <div style="font-weight:700; color:#dc3545; margin-bottom:10px;">⚠️ Registros de Morte nesta Baía</div>
+                        <table style="width:100%; font-size:12px;">
+                            <tr style="background:#f5f5f5;"><th style="padding:8px; text-align:left;">Data</th><th style="padding:8px; text-align:left;">Qtd</th><th style="padding:8px; text-align:left;">Valor</th></tr>
+                            ${mortesNaBaia.map(m => `<tr><td style="padding:8px;">${formatarDataBR(m.data)}</td><td style="padding:8px;">${m.qtd}</td><td style="padding:8px;">R$ ${m.total.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td></tr>`).join('')}
+                        </table>
+                    </div>` : ''}
+                <p style="font-size:11px; color:#999; margin-top:15px;">* Valores calculados com Preço BOI R$ ${precoBoiSp.toFixed(2)} e ${qtd} animais × 19,5@</p>`;
+
+            document.getElementById('modalBaiaConteudo').innerHTML = html;
+            document.getElementById('modalBaia').style.display = 'flex';
+        }
+
+        function fecharModalBaia() {
+            document.getElementById('modalBaia').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('modalBaia');
+            if (modal) modal.addEventListener('click', function(e) { if (e.target === this) fecharModalBaia(); });
+        });
+    </script>
+</body>
+</html>
